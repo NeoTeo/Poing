@@ -1,0 +1,284 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 46;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		ABA965FA14FFBE4100911CC8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA965F914FFBE4100911CC8 /* UIKit.framework */; };
+		ABA965FC14FFBE4100911CC8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA965FB14FFBE4100911CC8 /* Foundation.framework */; };
+		ABA965FE14FFBE4100911CC8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA965FD14FFBE4100911CC8 /* CoreGraphics.framework */; };
+		ABA9660414FFBE4100911CC8 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = ABA9660214FFBE4100911CC8 /* InfoPlist.strings */; };
+		ABA9660614FFBE4200911CC8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA9660514FFBE4100911CC8 /* main.m */; };
+		ABA9660A14FFBE4200911CC8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA9660914FFBE4200911CC8 /* AppDelegate.m */; };
+		ABA9660D14FFBE4200911CC8 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABA9660B14FFBE4200911CC8 /* MainStoryboard.storyboard */; };
+		ABA9661014FFBE4200911CC8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA9660F14FFBE4200911CC8 /* ViewController.m */; };
+/* End PBXBuildFile section */
+
+/* Begin PBXFileReference section */
+		ABA965F514FFBE4100911CC8 /* Poing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Poing.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		ABA965F914FFBE4100911CC8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
+		ABA965FB14FFBE4100911CC8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
+		ABA965FD14FFBE4100911CC8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
+		ABA9660114FFBE4100911CC8 /* Poing-Info.plist */ = {isa = PBXFileReference; path = "Poing-Info.plist"; sourceTree = "<group>"; };
+		ABA9660314FFBE4100911CC8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
+		ABA9660514FFBE4100911CC8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		ABA9660714FFBE4200911CC8 /* Poing-Prefix.pch */ = {isa = PBXFileReference; path = "Poing-Prefix.pch"; sourceTree = "<group>"; };
+		ABA9660814FFBE4200911CC8 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		ABA9660914FFBE4200911CC8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		ABA9660C14FFBE4200911CC8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
+		ABA9660E14FFBE4200911CC8 /* ViewController.h */ = {isa = PBXFileReference; path = ViewController.h; sourceTree = "<group>"; };
+		ABA9660F14FFBE4200911CC8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		ABA965F214FFBE4100911CC8 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABA965FA14FFBE4100911CC8 /* UIKit.framework in Frameworks */,
+				ABA965FC14FFBE4100911CC8 /* Foundation.framework in Frameworks */,
+				ABA965FE14FFBE4100911CC8 /* CoreGraphics.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		ABA965EA14FFBE4000911CC8 = {
+			isa = PBXGroup;
+			children = (
+				ABA965FF14FFBE4100911CC8 /* Poing */,
+				ABA965F814FFBE4100911CC8 /* Frameworks */,
+				ABA965F614FFBE4100911CC8 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		ABA965F614FFBE4100911CC8 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				ABA965F514FFBE4100911CC8 /* Poing.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		ABA965F814FFBE4100911CC8 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				ABA965F914FFBE4100911CC8 /* UIKit.framework */,
+				ABA965FB14FFBE4100911CC8 /* Foundation.framework */,
+				ABA965FD14FFBE4100911CC8 /* CoreGraphics.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		ABA965FF14FFBE4100911CC8 /* Poing */ = {
+			isa = PBXGroup;
+			children = (
+				ABA9660814FFBE4200911CC8 /* AppDelegate.h */,
+				ABA9660914FFBE4200911CC8 /* AppDelegate.m */,
+				ABA9660B14FFBE4200911CC8 /* MainStoryboard.storyboard */,
+				ABA9660E14FFBE4200911CC8 /* ViewController.h */,
+				ABA9660F14FFBE4200911CC8 /* ViewController.m */,
+				ABA9660014FFBE4100911CC8 /* Supporting Files */,
+			);
+			path = Poing;
+			sourceTree = "<group>";
+		};
+		ABA9660014FFBE4100911CC8 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				ABA9660114FFBE4100911CC8 /* Poing-Info.plist */,
+				ABA9660214FFBE4100911CC8 /* InfoPlist.strings */,
+				ABA9660514FFBE4100911CC8 /* main.m */,
+				ABA9660714FFBE4200911CC8 /* Poing-Prefix.pch */,
+			);
+			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		ABA965F414FFBE4100911CC8 /* Poing */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = ABA9661314FFBE4200911CC8 /* Build configuration list for PBXNativeTarget "Poing" */;
+			buildPhases = (
+				ABA965F114FFBE4100911CC8 /* Sources */,
+				ABA965F214FFBE4100911CC8 /* Frameworks */,
+				ABA965F314FFBE4100911CC8 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = Poing;
+			productName = Poing;
+			productReference = ABA965F514FFBE4100911CC8 /* Poing.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		ABA965EC14FFBE4000911CC8 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastUpgradeCheck = 0420;
+				ORGANIZATIONNAME = "I Love You Bits";
+			};
+			buildConfigurationList = ABA965EF14FFBE4000911CC8 /* Build configuration list for PBXProject "Poing" */;
+			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+			);
+			mainGroup = ABA965EA14FFBE4000911CC8;
+			productRefGroup = ABA965F614FFBE4100911CC8 /* Products */;
+			projectDirPath = "";
+			projectRoot = "";
+			targets = (
+				ABA965F414FFBE4100911CC8 /* Poing */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXResourcesBuildPhase section */
+		ABA965F314FFBE4100911CC8 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABA9660414FFBE4100911CC8 /* InfoPlist.strings in Resources */,
+				ABA9660D14FFBE4200911CC8 /* MainStoryboard.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		ABA965F114FFBE4100911CC8 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				ABA9660614FFBE4200911CC8 /* main.m in Sources */,
+				ABA9660A14FFBE4200911CC8 /* AppDelegate.m in Sources */,
+				ABA9661014FFBE4200911CC8 /* ViewController.m in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		ABA9660214FFBE4100911CC8 /* InfoPlist.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ABA9660314FFBE4100911CC8 /* en */,
+			);
+			name = InfoPlist.strings;
+			sourceTree = "<group>";
+		};
+		ABA9660B14FFBE4200911CC8 /* MainStoryboard.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				ABA9660C14FFBE4200911CC8 /* en */,
+			);
+			name = MainStoryboard.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		ABA9661114FFBE4200911CC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_SYMBOLS_PRIVATE_EXTERN = NO;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+			};
+			name = Debug;
+		};
+		ABA9661214FFBE4200911CC8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				ARCHS = "$(ARCHS_STANDARD_32_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
+				COPY_PHASE_STRIP = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu99;
+				GCC_VERSION = com.apple.compilers.llvm.clang.1_0;
+				GCC_WARN_ABOUT_MISSING_PROTOTYPES = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 5.0;
+				OTHER_CFLAGS = "-DNS_BLOCK_ASSERTIONS=1";
+				SDKROOT = iphoneos;
+				TARGETED_DEVICE_FAMILY = 2;
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		ABA9661414FFBE4200911CC8 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Poing/Poing-Prefix.pch";
+				INFOPLIST_FILE = "Poing/Poing-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Debug;
+		};
+		ABA9661514FFBE4200911CC8 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				GCC_PRECOMPILE_PREFIX_HEADER = YES;
+				GCC_PREFIX_HEADER = "Poing/Poing-Prefix.pch";
+				INFOPLIST_FILE = "Poing/Poing-Info.plist";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				WRAPPER_EXTENSION = app;
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		ABA965EF14FFBE4000911CC8 /* Build configuration list for PBXProject "Poing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABA9661114FFBE4200911CC8 /* Debug */,
+				ABA9661214FFBE4200911CC8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		ABA9661314FFBE4200911CC8 /* Build configuration list for PBXNativeTarget "Poing" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				ABA9661414FFBE4200911CC8 /* Debug */,
+				ABA9661514FFBE4200911CC8 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = ABA965EC14FFBE4000911CC8 /* Project object */;
+}
