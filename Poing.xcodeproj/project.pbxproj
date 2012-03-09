@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		AB978635150115D700A2F77C /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB978634150115D700A2F77C /* QuartzCore.framework */; };
 		ABA965FA14FFBE4100911CC8 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA965F914FFBE4100911CC8 /* UIKit.framework */; };
 		ABA965FC14FFBE4100911CC8 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA965FB14FFBE4100911CC8 /* Foundation.framework */; };
 		ABA965FE14FFBE4100911CC8 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ABA965FD14FFBE4100911CC8 /* CoreGraphics.framework */; };
@@ -15,22 +16,26 @@
 		ABA9660A14FFBE4200911CC8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA9660914FFBE4200911CC8 /* AppDelegate.m */; };
 		ABA9660D14FFBE4200911CC8 /* MainStoryboard.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABA9660B14FFBE4200911CC8 /* MainStoryboard.storyboard */; };
 		ABA9661014FFBE4200911CC8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA9660F14FFBE4200911CC8 /* ViewController.m */; };
+		ABA9661814FFC06800911CC8 /* PoingView.m in Sources */ = {isa = PBXBuildFile; fileRef = ABA9661714FFC06800911CC8 /* PoingView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		AB978634150115D700A2F77C /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		ABA965F514FFBE4100911CC8 /* Poing.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Poing.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		ABA965F914FFBE4100911CC8 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		ABA965FB14FFBE4100911CC8 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		ABA965FD14FFBE4100911CC8 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
-		ABA9660114FFBE4100911CC8 /* Poing-Info.plist */ = {isa = PBXFileReference; path = "Poing-Info.plist"; sourceTree = "<group>"; };
+		ABA9660114FFBE4100911CC8 /* Poing-Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = "Poing-Info.plist"; sourceTree = "<group>"; };
 		ABA9660314FFBE4100911CC8 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		ABA9660514FFBE4100911CC8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		ABA9660714FFBE4200911CC8 /* Poing-Prefix.pch */ = {isa = PBXFileReference; path = "Poing-Prefix.pch"; sourceTree = "<group>"; };
-		ABA9660814FFBE4200911CC8 /* AppDelegate.h */ = {isa = PBXFileReference; path = AppDelegate.h; sourceTree = "<group>"; };
+		ABA9660714FFBE4200911CC8 /* Poing-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Poing-Prefix.pch"; sourceTree = "<group>"; };
+		ABA9660814FFBE4200911CC8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		ABA9660914FFBE4200911CC8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		ABA9660C14FFBE4200911CC8 /* en */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = en; path = en.lproj/MainStoryboard.storyboard; sourceTree = "<group>"; };
-		ABA9660E14FFBE4200911CC8 /* ViewController.h */ = {isa = PBXFileReference; path = ViewController.h; sourceTree = "<group>"; };
+		ABA9660E14FFBE4200911CC8 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		ABA9660F14FFBE4200911CC8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		ABA9661614FFC06800911CC8 /* PoingView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PoingView.h; sourceTree = "<group>"; };
+		ABA9661714FFC06800911CC8 /* PoingView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PoingView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -38,6 +43,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				AB978635150115D700A2F77C /* QuartzCore.framework in Frameworks */,
 				ABA965FA14FFBE4100911CC8 /* UIKit.framework in Frameworks */,
 				ABA965FC14FFBE4100911CC8 /* Foundation.framework in Frameworks */,
 				ABA965FE14FFBE4100911CC8 /* CoreGraphics.framework in Frameworks */,
@@ -67,6 +73,7 @@
 		ABA965F814FFBE4100911CC8 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				AB978634150115D700A2F77C /* QuartzCore.framework */,
 				ABA965F914FFBE4100911CC8 /* UIKit.framework */,
 				ABA965FB14FFBE4100911CC8 /* Foundation.framework */,
 				ABA965FD14FFBE4100911CC8 /* CoreGraphics.framework */,
@@ -82,6 +89,8 @@
 				ABA9660B14FFBE4200911CC8 /* MainStoryboard.storyboard */,
 				ABA9660E14FFBE4200911CC8 /* ViewController.h */,
 				ABA9660F14FFBE4200911CC8 /* ViewController.m */,
+				ABA9661614FFC06800911CC8 /* PoingView.h */,
+				ABA9661714FFC06800911CC8 /* PoingView.m */,
 				ABA9660014FFBE4100911CC8 /* Supporting Files */,
 			);
 			path = Poing;
@@ -124,7 +133,7 @@
 		ABA965EC14FFBE4000911CC8 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0420;
+				LastUpgradeCheck = 0430;
 				ORGANIZATIONNAME = "I Love You Bits";
 			};
 			buildConfigurationList = ABA965EF14FFBE4000911CC8 /* Build configuration list for PBXProject "Poing" */;
@@ -164,6 +173,7 @@
 				ABA9660614FFBE4200911CC8 /* main.m in Sources */,
 				ABA9660A14FFBE4200911CC8 /* AppDelegate.m in Sources */,
 				ABA9661014FFBE4200911CC8 /* ViewController.m in Sources */,
+				ABA9661814FFC06800911CC8 /* PoingView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -277,6 +287,7 @@
 				ABA9661514FFBE4200911CC8 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
