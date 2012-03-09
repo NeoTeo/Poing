@@ -7,8 +7,11 @@
 //
 
 #import "ViewController.h"
+#import "PoingView.h"
+
 
 @implementation ViewController
+
 
 - (void)didReceiveMemoryWarning
 {
@@ -18,10 +21,13 @@
 
 #pragma mark - View lifecycle
 
+
+
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    //[self runGameLoop];
 }
 
 - (void)viewDidUnload
