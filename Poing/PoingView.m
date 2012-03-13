@@ -39,10 +39,20 @@ static bool arse = YES;
                       nil];
          */ 
         // static because we want the array to remain outside the scope of the function,
-        static Vector3 tmpPoints[NUM_PARTICLES] = {
+
+static Vector3 tmpPoints[NUM_PARTICLES] = {
             {320,50,0},
-            {320,150,0},
-            {320,300,0}};
+            {320,100,0},
+            {320,150,0},            
+            {320,200,0},
+            {320,250,0},
+            {320,300,0},
+            {320,350,0},
+            {320,400,0},
+            {320,450,0},
+            {320,500,0},
+            {320,550,0},
+            {320,600,0}};
         
         userPosition.x = tmpPoints[0].x;
         userPosition.y = tmpPoints[0].y;    
@@ -58,6 +68,13 @@ static bool arse = YES;
         for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
         {
             previousPositions[curIndex] = currentPositions[curIndex];
+        }
+        
+        for (int curIndex=0; curIndex < NUM_CONSTRAINTS; curIndex++) 
+        {
+            constraints[curIndex].particleAIndex = curIndex;
+            constraints[curIndex].particleBIndex = curIndex+1;
+            constraints[curIndex].restLength = 50;
         }
         
         displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(setNeedsDisplay)];
@@ -111,13 +128,8 @@ static bool arse = YES;
 
 - (void)movePointsUsingVerletIntegration
 {
-    arse=NO;
-
     for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
-    {
-        if (arse)
-            NSLog(@"the current pos for index %d is %f,%f",curIndex,currentPositions[curIndex].x,currentPositions[curIndex].y);
-        
+    {        
         // x points to the current position
         Vector3 *x = &currentPositions[curIndex];
         // temp is a copy of the current position
@@ -125,71 +137,66 @@ static bool arse = YES;
         
         // oldPos is a reference to the previous position
         Vector3 *oldPos = &previousPositions[curIndex];
-        if (arse)
-            NSLog(@"oldPos is %f,%f",oldPos->x,oldPos->y);
-        
         // a is a reference the accumulated force
         Vector3 *a = &forceAccumulators[curIndex];
-        if (arse)
-            NSLog(@"a is %f,%f",a->x,a->y);
         
         // Verlet integration: x += x-oldPos+a*(timeStep*timeStep) ;
         x->x += x->x-oldPos->x+a->x*timeStep*timeStep;
         x->y += x->y-oldPos->y+a->y*timeStep*timeStep;
-        if (arse) 
-            NSLog(@"result is is %f,%f",x->x,x->y);
         *oldPos = temp;
     }
     
-    currentPositions[0].x = userPosition.x;
-    currentPositions[0].y = userPosition.y;    
+//    currentPositions[0].x = userPosition.x;
+//    currentPositions[0].y = userPosition.y;    
 }
 
 - (void)satisfyConstraints
 {
-
-    float restLength = 50;
+    //float restLength = 50;
     for (int j=0; j < NUM_ITERATIONS; j++) {
-        // quick bodge for three points
-        for (int p=0; p<3; p++) 
+        for (int p=0; p<NUM_CONSTRAINTS; p++) 
         {
+            Constraint c = constraints[p];
             
-            Vector3 *x1 = &currentPositions[p];
-            Vector3 *x2 = &currentPositions[p+1];
+            Vector3 *x1 = &currentPositions[c.particleAIndex];
+            Vector3 *x2 = &currentPositions[c.particleBIndex];
             Vector3 delta;
+                    
             delta.x = x2->x-x1->x;
             delta.y = x2->y-x1->y;
-            // dot product of the delta.
-            float deltadot = delta.x*delta.x+delta.y*delta.y;
-            // find length
-            float deltaLength = sqrtf(deltadot);
-            float diff = (deltaLength-restLength)/deltaLength;
-            /*
-            if (arse)
-            {
-                NSLog(@"Delta is %f,%f",delta.x,delta.y);
-                NSLog(@"deltadot os %f",deltadot);
-                NSLog(@"deltalength os %f",deltaLength);
-                NSLog(@"Before");            
-                NSLog(@"x1 is %f,%f",x1->x,x1->y);
-                NSLog(@"x2 is %f,%f",x2->x,x2->y);
-            }
-            */
-            x1->x += delta.x*0.5*diff;
-            x1->y += delta.y*0.5*diff;
+#if 1           
+            // The version with square root approximation.
+            float restLengthSqr = c.restLength*c.restLength;
+            float deltaDot = delta.x*delta.x + delta.y*delta.y;
             
-            x2->x -= delta.x*0.5*diff;
-            x2->y -= delta.y*0.5*diff;        
-            /*
-            if (arse) {
-                NSLog(@"After");
-                NSLog(@"x1 is %f,%f",x1->x,x1->y);
-                NSLog(@"x2 is %f,%f",x2->x,x2->y);
-            }
-             */
+            delta.x *= restLengthSqr/(deltaDot+restLengthSqr)-0.5;
+            delta.y *= restLengthSqr/(deltaDot+restLengthSqr)-0.5;
+
+            x1->x -= delta.x;
+            x1->y -= delta.y;
+            x2->x += delta.x;
+            x2->y += delta.y;
+#else
+             // The version with a square root call.
+             // dot product of the delta.
+             float deltadot = delta.x*delta.x+delta.y*delta.y;
+             // find length
+             float deltaLength = sqrtf(deltadot);
+             float diff = (deltaLength-c.restLength)/deltaLength;
+             // Each point takes half (0.5) of the difference in distance (diff) 
+             // and adds to one (x1) and subracts from the other (x2) so they converge.
+             // I think...
+             x1->x += delta.x*0.5*diff;
+             x1->y += delta.y*0.5*diff;
+             
+             x2->x -= delta.x*0.5*diff;
+             x2->y -= delta.y*0.5*diff;        
+#endif
         }
+        // constrain position 0 to the position selected by the user.
+        currentPositions[0].x = userPosition.x;
+        currentPositions[0].y = userPosition.y;    
     }
-    
 }
 
 
