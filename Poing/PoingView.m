@@ -18,12 +18,29 @@
 @implementation PoingView
 
 @synthesize displayLink;
-static bool arse = YES;
+
+
+- (Vector3)vmin:(Vector3 *)a  against:(Vector3 *)b
+{
+    Vector3 newVector;
+    
+    newVector.x = a->x < b->x ? a->x : b->x;
+    newVector.y = a->y < b->y ? a->y : b->y;
+    newVector.z = a->z < b->z ? a->z : b->z;
+    
+    return  newVector;
+}
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
+        Vector3 t1 = {2,4,3};
+        Vector3 t2 = {2,3,9};
+        Vector3 r1 = {0,0,0};
+        
+        r1 = [self vmin:&t1 against:&t2];
+        NSLog(@"vmin returned %f,%f,%f",r1.x,r1.y,r1.z);
         /*
         // Begin by initializing the data structures.
         pointArray = [[NSMutableArray alloc] initWithObjects:
@@ -38,9 +55,9 @@ static bool arse = YES;
                       [NSValue valueWithCGPoint:CGPointMake(20, 630)],
                       nil];
          */ 
-        // static because we want the array to remain outside the scope of the function,
-
-static Vector3 tmpPoints[NUM_PARTICLES] = {
+        // static because we want the array to persist outside the scope of the function.
+        static Vector3 tmpPoints[NUM_PARTICLES];// = {
+/*        
             {320,50,0},
             {320,100,0},
             {320,150,0},            
@@ -53,14 +70,26 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
             {320,500,0},
             {320,550,0},
             {320,600,0}};
+*/
+        int ypos = 0;
+        int yoff = MAX_LEN/NUM_PARTICLES;
+        for (int pt=0; pt<NUM_PARTICLES; pt++) {
+            tmpPoints[pt].x = 320;
+            tmpPoints[pt].y = ypos;
+            tmpPoints[pt].z = 0;
+            ypos += yoff;
+        }
+        userPosition1.x = tmpPoints[0].x;
+        userPosition1.y = tmpPoints[0].y; 
         
-        userPosition.x = tmpPoints[0].x;
-        userPosition.y = tmpPoints[0].y;    
+        twoFingered = NO;
+        userPosition2.x = tmpPoints[NUM_PARTICLES-1].x;
+        userPosition2.y = tmpPoints[NUM_PARTICLES-1].y;
         
         currentPositions = tmpPoints;
 
         gravity.x = 0.0;
-        gravity.y = 2;
+        gravity.y = 1;
         
         timeStep = 1;
         
@@ -74,7 +103,7 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
         {
             constraints[curIndex].particleAIndex = curIndex;
             constraints[curIndex].particleBIndex = curIndex+1;
-            constraints[curIndex].restLength = 50;
+            constraints[curIndex].restLength = yoff;
         }
         
         displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(setNeedsDisplay)];
@@ -86,17 +115,16 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
     }
     return self;
 }
-
+/*
 - (id)initWithFrame:(CGRect)frame
 {
-    NSLog(@"Setup");
-
     self = [super initWithFrame:frame];
     if (self) {
         // Initialization code
     }
     return self;
 }
+*/
 
 - (double)getCurrentTime
 {
@@ -107,7 +135,7 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
     // If this is the first time we've run, get the timebase.
     // We can use denom == 0 to indicate that sTimebaseInfo is
     // uninitialised because it makes no sense to have a zero
-    // denominator is a fraction.
+    // denominator in a fraction.
     if (sTimebaseInfo.denom == 0) {
         (void)mach_timebase_info(&sTimebaseInfo);
     }
@@ -128,6 +156,7 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
 
 - (void)movePointsUsingVerletIntegration
 {
+    float timeStepSquared = timeStep*timeStep;
     for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
     {        
         // x points to the current position
@@ -139,21 +168,16 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
         Vector3 *oldPos = &previousPositions[curIndex];
         // a is a reference the accumulated force
         Vector3 *a = &forceAccumulators[curIndex];
-        
         // Verlet integration: x += x-oldPos+a*(timeStep*timeStep) ;
-        x->x += x->x-oldPos->x+a->x*timeStep*timeStep;
-        x->y += x->y-oldPos->y+a->y*timeStep*timeStep;
+        x->x += x->x-oldPos->x+a->x*timeStepSquared;
+        x->y += x->y-oldPos->y+a->y*timeStepSquared;
         *oldPos = temp;
     }
-    
-//    currentPositions[0].x = userPosition.x;
-//    currentPositions[0].y = userPosition.y;    
 }
 
 - (void)satisfyConstraints
 {
-    //float restLength = 50;
-    for (int j=0; j < NUM_ITERATIONS; j++) {
+    for (int j=0; j<NUM_ITERATIONS; j++) {
         for (int p=0; p<NUM_CONSTRAINTS; p++) 
         {
             Constraint c = constraints[p];
@@ -168,14 +192,15 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
             // The version with square root approximation.
             float restLengthSqr = c.restLength*c.restLength;
             float deltaDot = delta.x*delta.x + delta.y*delta.y;
-            
-            delta.x *= restLengthSqr/(deltaDot+restLengthSqr)-0.5;
-            delta.y *= restLengthSqr/(deltaDot+restLengthSqr)-0.5;
+            // As long as the deltaDot is greater than the restLengthSqr the sign of the expression 
+            // will be negative unless I move the 0.5 before rather than after.
+            delta.x *= 0.5-restLengthSqr/(deltaDot+restLengthSqr);//-0.5;
+            delta.y *= 0.5-restLengthSqr/(deltaDot+restLengthSqr);//-0.5;
 
-            x1->x -= delta.x;
-            x1->y -= delta.y;
-            x2->x += delta.x;
-            x2->y += delta.y;
+            x1->x += delta.x;
+            x1->y += delta.y;
+            x2->x -= delta.x;
+            x2->y -= delta.y;
 #else
              // The version with a square root call.
              // dot product of the delta.
@@ -194,23 +219,23 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
 #endif
         }
         // constrain position 0 to the position selected by the user.
-        currentPositions[0].x = userPosition.x;
-        currentPositions[0].y = userPosition.y;    
+        currentPositions[0].x = userPosition1.x;
+        currentPositions[0].y = userPosition1.y;    
+
+        if (twoFingered) {
+            currentPositions[NUM_PARTICLES-1].x = userPosition2.x;
+            currentPositions[NUM_PARTICLES-1].y = userPosition2.y;    
+        }
+
     }
 }
 
 
 - (void)updateGame
-{
-    
+{    
     [self accumulateForces];
     [self movePointsUsingVerletIntegration];
     [self satisfyConstraints];
-    
-    // debug output
-    if (arse) {
-        arse = NO;
-    }
 }
 
 - (void)drawScene
@@ -219,31 +244,77 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
     CGContextRef myContext = UIGraphicsGetCurrentContext();
     
     CGContextBeginPath(myContext);
+    // The first point is where we move to.
+    CGContextMoveToPoint(myContext, currentPositions[0].x, currentPositions[0].y);
     
-    for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++)
+    for (int curIndex=1; curIndex < NUM_PARTICLES; curIndex++)
     {
-        
-        // ********** Your drawing code here **********
-        // The first point is where we move to, subsequent points we draw lines to. 
-        if (!curIndex) {
-            CGContextMoveToPoint(myContext, currentPositions[curIndex].x, currentPositions[curIndex].y);
-        } else
-        {
-            CGContextAddLineToPoint(myContext, currentPositions[curIndex].x, currentPositions[curIndex].y);
-        }
+        // Subsequent points we draw lines to. 
+        CGContextAddLineToPoint(myContext, currentPositions[curIndex].x, currentPositions[curIndex].y);
     }
+        
     CGContextStrokePath(myContext);
+    
+    // Bodge to add ball
+    CGRect ballRect = CGRectMake(ballPos.x-10, ballPos.y-10, 20, 20);
+    CGContextFillEllipseInRect(myContext, ballRect);
 }
 
 
+// TouchesBegan only received new or changed touch events. 
+// We can, however, get at all tracked touches through the event parameter.
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    CGPoint location = [[touches anyObject] locationInView:self];
-    
-    userPosition.x = location.x;
-    userPosition.y = location.y;
-    NSLog(@"Touched at %f,%f",location.x,location.y);
-    arse = YES;
+    int counter =0;
+    NSSet *allMyTouches = [event allTouches];
+    for (UITouch *touch in allMyTouches) {
 
+        if (counter == 0) {
+            CGPoint location = [touch locationInView:self];
+            userPosition1.x = location.x;
+            userPosition1.y = location.y;
+            NSLog(@"one touch fine");
+        }
+        // only fix the second positon if there is more than one touch and we are at the last touch.
+        if (counter && (counter == [touches count]-1)) {
+            CGPoint location = [touch locationInView:self];
+            userPosition2.x = location.x;
+            userPosition2.y = location.y;
+            twoFingered = YES;
+            NSLog(@"Second finger at %f,%f",location.x,location.y);
+        }
+        counter++;
+    }
+}
+
+- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    int counter =0;
+    NSSet *allMyTouches = [event allTouches];
+    for (UITouch *touch in allMyTouches) {
+
+        if (counter == 0) {
+            CGPoint location = [touch locationInView:self];
+            userPosition1.x = location.x;
+            userPosition1.y = location.y;
+        }
+        // only fix the second positon if there is more than one touch and we are at the last touch.
+        if (counter && (counter == [touches count]-1)) {
+            CGPoint location = [touch locationInView:self];
+            userPosition2.x = location.x;
+            userPosition2.y = location.y;
+            twoFingered = YES;
+                        NSLog(@"Second finger moved at %f,%f",location.x,location.y);
+        }
+        counter++;
+    }
+}
+
+- (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+{
+    if ([touches count] < 2) {
+        twoFingered = NO;
+        NSLog(@"Two fingered no more");
+    }
 }
 
 - (void)MSEngineTick
@@ -276,8 +347,10 @@ static Vector3 tmpPoints[NUM_PARTICLES] = {
 
     [self drawScene];
 }
+
 // Only override drawRect: if you perform custom drawing.
 // An empty implementation adversely affects performance during animation.
+// This is called every vsync by CADisplayLink
 - (void)drawRect:(CGRect)rect
 {
     [self MSEngineTick];

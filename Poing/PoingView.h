@@ -20,21 +20,32 @@ typedef struct {
     float restLength;
 } Constraint;
 
-#define NUM_PARTICLES 12
-#define NUM_ITERATIONS 1
+#define MAX_LEN 600
+#define NUM_PARTICLES 24
+#define NUM_ITERATIONS 2 // The higher the NUM_PARTICLES the higher the NUM_ITERATIONS needs to be
 #define NUM_CONSTRAINTS NUM_PARTICLES-1
 
 @interface PoingView : UIView
 {
     //NSMutableArray *pointArray;
-    Vector3 userPosition;
+    Vector3 userPosition1,userPosition2;
     Vector3 *currentPositions;
     Vector3 previousPositions[NUM_PARTICLES];
     Vector3 forceAccumulators[NUM_PARTICLES];
     Vector3 gravity;
     float   timeStep;
     
+    // Holds all particles in the system and will be the combination of the elastic and the ball.
+    Vector3 *allParticlesPosArray;
+    // The current positions of the elastic particles.
+    Vector3 *elasticParticlesPosArray; // replaces currentPositons
+    // The previous positions of the elastic particles.
+    Vector3 *prevElasticParticlesPosArray;
+    
+    // The ball
+    Vector3 ballPos;
     Constraint constraints[NUM_CONSTRAINTS];
+    BOOL twoFingered;
 }
 
 @property (nonatomic, strong) CADisplayLink *displayLink;
