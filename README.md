@@ -1,4 +1,4 @@
 Poing
 =====
 
-[](images/poing.gif)
+[![Animation showing elastic](images/poing.gif)]
