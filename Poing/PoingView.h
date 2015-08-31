@@ -20,9 +20,9 @@ typedef struct {
     float restLength;
 } Constraint;
 
-#define MAX_LEN 600
-#define NUM_PARTICLES 48
-#define NUM_ITERATIONS 4 // The higher the NUM_PARTICLES the higher the NUM_ITERATIONS needs to be
+#define MAX_LEN 400//600
+#define NUM_PARTICLES 192//48
+#define NUM_ITERATIONS 16//4 // The higher the NUM_PARTICLES the higher the NUM_ITERATIONS needs to be
 #define NUM_CONSTRAINTS NUM_PARTICLES-1
 
 @interface PoingView : UIView

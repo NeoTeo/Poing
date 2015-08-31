@@ -10,10 +10,10 @@
 #import <QuartzCore/QuartzCore.h>
 #import <mach/mach_time.h>
 
-#define MAXIMUM_FRAME_RATE 120
-#define MINIMUM_FRAME_RATE 15
-#define UPDATE_INTERVAL (1.0 / MAXIMUM_FRAME_RATE)
-#define MAX_CYCLES_PER_FRAME (MAXIMUM_FRAME_RATE / MINIMUM_FRAME_RATE)
+#define MAXIMUM_FRAME_RATE      120
+#define MINIMUM_FRAME_RATE      15
+#define UPDATE_INTERVAL         (1.0 / MAXIMUM_FRAME_RATE)
+#define MAX_CYCLES_PER_FRAME    (MAXIMUM_FRAME_RATE / MINIMUM_FRAME_RATE)
 
 @implementation PoingView
 
@@ -35,48 +35,39 @@
     c->z = a->z > b->z ? a->z : b->z;
 }
 
-- (id)initWithCoder:(NSCoder *)aDecoder
+- (instancetype)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        /*
-        // Begin by initializing the data structures.
-        pointArray = [[NSMutableArray alloc] initWithObjects:
-                      [NSValue valueWithCGPoint:CGPointMake(1, 1)],
-                      [NSValue valueWithCGPoint:CGPointMake(150, 200)],
-                      [NSValue valueWithCGPoint:CGPointMake(250, 320)],
-                      [NSValue valueWithCGPoint:CGPointMake(10, 350)],
-                      [NSValue valueWithCGPoint:CGPointMake(100, 400)],
-                      [NSValue valueWithCGPoint:CGPointMake(120, 420)],
-                      [NSValue valueWithCGPoint:CGPointMake(50, 510)],
-                      [NSValue valueWithCGPoint:CGPointMake(350, 520)],
-                      [NSValue valueWithCGPoint:CGPointMake(20, 630)],
-                      nil];
-         */ 
         // static because we want the array to persist outside the scope of the function.
         static Vector3 tmpPoints[NUM_PARTICLES];
         
         int ypos = 0;
         int yoff = MAX_LEN/NUM_PARTICLES;
+        
         for (int pt=0; pt<NUM_PARTICLES; pt++) {
+            
             tmpPoints[pt].x = 320;
             tmpPoints[pt].y = ypos;
             tmpPoints[pt].z = 0;
+            
             ypos += yoff;
         }
-        userPosition1.x = tmpPoints[0].x;
-        userPosition1.y = tmpPoints[0].y; 
         
-        twoFingered = NO;
-        userPosition2.x = tmpPoints[NUM_PARTICLES-1].x;
-        userPosition2.y = tmpPoints[NUM_PARTICLES-1].y;
+        userPosition1.x     = tmpPoints[0].x;
+        userPosition1.y     = tmpPoints[0].y;
+        userPosition2.x     = tmpPoints[NUM_PARTICLES-1].x;
+        userPosition2.y     = tmpPoints[NUM_PARTICLES-1].y;
         
-        currentPositions = tmpPoints;
+        twoFingered         = NO;
+        
+        currentPositions    = tmpPoints;
 
-        gravity.x = 0.0;
-        gravity.y = 1;
+        gravity.x           = 0.0;
+        gravity.y           = 1;
         
-        timeStep = 1;
+        timeStep            = 1;
+        
         
         // Start off with a static system.
         for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
@@ -92,16 +83,19 @@
         }
         
         // Ball init.
-        ballPos.x = 10;
-        ballPos.y = 10;
-        ballPos.z = 10;
-        ballPrevPos.x = ballPos.x-0.001;
-        ballPrevPos.y = ballPos.y-0.001;        
-        ballPrevPos.z = ballPos.z;
-        ballForce.x = ballForce.y = ballForce.z = 1;
+        ballPos.x       = 10;
+        ballPos.y       = 10;
+        ballPos.z       = 10;
+        
+        ballPrevPos.x   = ballPos.x-0.001;
+        ballPrevPos.y   = ballPos.y-0.001;
+        ballPrevPos.z   = ballPos.z;
+        
+        ballForce.x     = ballForce.y = ballForce.z = 1;
         
         // Registering a selector with CADisplayLink allows you to be notified at every vsync.
-        displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(setNeedsDisplay)];
+        displayLink     = [CADisplayLink displayLinkWithTarget:self selector:@selector(setNeedsDisplay)];
+        
         [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
         
         NSLog(@"Initialization done.");
@@ -109,16 +103,6 @@
     }
     return self;
 }
-/*
-- (id)initWithFrame:(CGRect)frame
-{
-    self = [super initWithFrame:frame];
-    if (self) {
-        // Initialization code
-    }
-    return self;
-}
-*/
 
 - (double)getCurrentTime
 {
@@ -158,16 +142,20 @@
     {        
         // x points to the current position
         Vector3 *x = &particlePosArray[curIndex];
+        
         // temp is a copy of the current position
         Vector3 temp = particlePosArray[curIndex];
         
         // oldPos is a reference to the previous position
         Vector3 *oldPos = &particlePreviousPosArray[curIndex];
+        
         // a is a reference the accumulated force
         Vector3 *a = &forcesArray[curIndex];
+        
         // Verlet integration: x += x-oldPos+a*(timeStep*timeStep) ;
         x->x += x->x-oldPos->x+a->x*timeStepSquared;
         x->y += x->y-oldPos->y+a->y*timeStepSquared;
+        
         *oldPos = temp;
     }
 }
@@ -177,31 +165,22 @@
              withConstraints:(Constraint *)constraintArray 
                      ofCount:(int)constraintCount
 {
-    // Do a bounds check run. 
-    // MinVector and maxVector define a square bounds.
-    //Vector3 minVector = {0,0,0};
-    //Vector3 maxVector = {500,500,500};
 
-    for (int p=0; p<constraintCount; p++) 
+    for (int p=0; p<constraintCount; p++)
     {
-        Constraint c = constraintArray[p];
+        Constraint c    = constraintArray[p];
         
-        Vector3 *x1 = &particleArray[c.particleAIndex];
-        Vector3 *x2 = &particleArray[c.particleBIndex];
+        Vector3 *x1     = &particleArray[c.particleAIndex];
+        Vector3 *x2     = &particleArray[c.particleBIndex];
         Vector3 delta;
-        /*
-        [self vmax:x1 against:&minVector into:x1];
-        [self vmin:x1 against:&maxVector into:x1];
-        [self vmax:x2 against:&minVector into:x2];
-        [self vmin:x2 against:&maxVector into:x2];
-         */
         
-        delta.x = x2->x-x1->x;
-        delta.y = x2->y-x1->y;
+        delta.x         = x2->x-x1->x;
+        delta.y         = x2->y-x1->y;
 
         // The version with square root approximation.
         float restLengthSqr = c.restLength*c.restLength;
-        float deltaDot = delta.x*delta.x + delta.y*delta.y;
+        float deltaDot      = delta.x*delta.x + delta.y*delta.y;
+        
         // As long as the deltaDot is greater than the restLengthSqr the sign of the expression 
         // will be negative unless I move the 0.5 before rather than after.
         delta.x *= 0.5-restLengthSqr/(deltaDot+restLengthSqr);//-0.5;
@@ -268,102 +247,7 @@
     [self moveParticlesUsingVerletIntegration:&ballPos ofCount:1 withPreviousPositions:&ballPrevPos withForces:&ballForce];
     [self satisfyBallConstraints];
 }
-/*
- - (void)movePointsUsingVerletIntegration
- {
- float timeStepSquared = timeStep*timeStep;
- for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
- {        
- // x points to the current position
- Vector3 *x = &currentPositions[curIndex];
- // temp is a copy of the current position
- Vector3 temp = currentPositions[curIndex];
- 
- // oldPos is a reference to the previous position
- Vector3 *oldPos = &previousPositions[curIndex];
- // a is a reference the accumulated force
- Vector3 *a = &forceAccumulators[curIndex];
- // Verlet integration: x += x-oldPos+a*(timeStep*timeStep) ;
- x->x += x->x-oldPos->x+a->x*timeStepSquared;
- x->y += x->y-oldPos->y+a->y*timeStepSquared;
- *oldPos = temp;
- }
- } 
- */
-/*
- - (void)accumulateForces
- {
- for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
- {
- forceAccumulators[curIndex] = gravity;
- }
- }
 
- */
-/*
-- (void)satisfyConstraints
-{
-    for (int j=0; j<NUM_ITERATIONS; j++) {
-        for (int p=0; p<NUM_CONSTRAINTS; p++) 
-        {
-            Constraint c = constraints[p];
-            
-            Vector3 *x1 = &currentPositions[c.particleAIndex];
-            Vector3 *x2 = &currentPositions[c.particleBIndex];
-            Vector3 delta;
-                    
-            delta.x = x2->x-x1->x;
-            delta.y = x2->y-x1->y;
-#if 1           
-            // The version with square root approximation.
-            float restLengthSqr = c.restLength*c.restLength;
-            float deltaDot = delta.x*delta.x + delta.y*delta.y;
-            // As long as the deltaDot is greater than the restLengthSqr the sign of the expression 
-            // will be negative unless I move the 0.5 before rather than after.
-            delta.x *= 0.5-restLengthSqr/(deltaDot+restLengthSqr);//-0.5;
-            delta.y *= 0.5-restLengthSqr/(deltaDot+restLengthSqr);//-0.5;
-
-            x1->x += delta.x;
-            x1->y += delta.y;
-            x2->x -= delta.x;
-            x2->y -= delta.y;
-#else
-             // The version with a square root call.
-             // dot product of the delta.
-             float deltadot = delta.x*delta.x+delta.y*delta.y;
-             // find length
-             float deltaLength = sqrtf(deltadot);
-             float diff = (deltaLength-c.restLength)/deltaLength;
-             // Each point takes half (0.5) of the difference in distance (diff) 
-             // and adds to one (x1) and subracts from the other (x2) so they converge.
-             // I think...
-             x1->x += delta.x*0.5*diff;
-             x1->y += delta.y*0.5*diff;
-             
-             x2->x -= delta.x*0.5*diff;
-             x2->y -= delta.y*0.5*diff;        
-#endif
-        }
-        // constrain position 0 to the position selected by the user.
-        currentPositions[0].x = userPosition1.x;
-        currentPositions[0].y = userPosition1.y;    
-
-        if (twoFingered) {
-            currentPositions[NUM_PARTICLES-1].x = userPosition2.x;
-            currentPositions[NUM_PARTICLES-1].y = userPosition2.y;    
-        }
-
-    }
-}
-*/
-/*
-- (void)updateGame
-{    
-    [self accumulateForces];
-    [self movePointsUsingVerletIntegration];
-    [self satisfyConstraints];
-}
-*/
 - (void)drawScene
 {
 
@@ -390,8 +274,10 @@
 // TouchesBegan only received new or changed touch events. 
 // We can, however, get at all tracked touches through the event parameter.
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    int counter =0;
+    
+    int counter         = 0;
     NSSet *allMyTouches = [event allTouches];
+    
     for (UITouch *touch in allMyTouches) {
 
         if (counter == 0) {
@@ -400,8 +286,9 @@
             userPosition1.y = location.y;
             NSLog(@"one touch fine");
         }
+        
         // only fix the second positon if there is more than one touch and we are at the last touch.
-        if (counter && (counter == [touches count]-1)) {
+        if (counter && (counter == touches.count-1)) {
             CGPoint location = [touch locationInView:self];
             userPosition2.x = location.x;
             userPosition2.y = location.y;
@@ -414,8 +301,9 @@
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    int counter =0;
+    int counter         = 0;
     NSSet *allMyTouches = [event allTouches];
+    
     for (UITouch *touch in allMyTouches) {
 
         if (counter == 0) {
@@ -423,13 +311,13 @@
             userPosition1.x = location.x;
             userPosition1.y = location.y;
         }
+        
         // only fix the second positon if there is more than one touch and we are at the last touch.
-        if (counter && (counter == [touches count]-1)) {
+        if (counter && (counter == touches.count-1)) {
             CGPoint location = [touch locationInView:self];
             userPosition2.x = location.x;
             userPosition2.y = location.y;
             twoFingered = YES;
-                        NSLog(@"Second finger moved at %f,%f",location.x,location.y);
         }
         counter++;
     }
@@ -437,16 +325,15 @@
 
 - (void) touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
 {
-    if ([touches count] < 2) {
+    if (touches.count < 2) {
         twoFingered = NO;
-        NSLog(@"Two fingered no more");
     }
 }
 
 - (void)MSEngineTick
 {
-    static double lastFrameTime = 0.0;
-    static double cyclesLeftOver = 0.0;
+    static double lastFrameTime     = 0.0;
+    static double cyclesLeftOver    = 0.0;
     double currentTime;
     double updateIterations;
     
@@ -456,7 +343,7 @@
     if (updateIterations > (MAX_CYCLES_PER_FRAME * UPDATE_INTERVAL)) {
         updateIterations = (MAX_CYCLES_PER_FRAME * UPDATE_INTERVAL);
     }
-    //NSLog(@"Update iterations %f",updateIterations);
+
     while (updateIterations > UPDATE_INTERVAL) {
         updateIterations -= UPDATE_INTERVAL;
         
@@ -468,8 +355,6 @@
         lastFrameTime = [self getCurrentTime];
     }
     lastFrameTime = currentTime;
-    
-    //drawScene(); /* Draw the scene only once */    
 
     [self drawScene];
 }

@@ -259,6 +259,7 @@
 		ABA9661414FFBE4200911CC8 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Poing/Poing-Prefix.pch";
 				INFOPLIST_FILE = "Poing/Poing-Info.plist";
@@ -270,6 +271,7 @@
 		ABA9661514FFBE4200911CC8 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "Poing/Poing-Prefix.pch";
 				INFOPLIST_FILE = "Poing/Poing-Info.plist";
