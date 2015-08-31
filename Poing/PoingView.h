@@ -21,13 +21,14 @@ typedef struct {
 } Constraint;
 
 #define MAX_LEN 600
-#define NUM_PARTICLES 24
-#define NUM_ITERATIONS 2 // The higher the NUM_PARTICLES the higher the NUM_ITERATIONS needs to be
+#define NUM_PARTICLES 48
+#define NUM_ITERATIONS 4 // The higher the NUM_PARTICLES the higher the NUM_ITERATIONS needs to be
 #define NUM_CONSTRAINTS NUM_PARTICLES-1
 
 @interface PoingView : UIView
 {
     //NSMutableArray *pointArray;
+    // The positions the user decides by touching the display.
     Vector3 userPosition1,userPosition2;
     Vector3 *currentPositions;
     Vector3 previousPositions[NUM_PARTICLES];
@@ -44,11 +45,16 @@ typedef struct {
     
     // The ball
     Vector3 ballPos;
+    Vector3 ballPrevPos;
+    Vector3 ballForce;
+    Constraint ballConstraint;
+    
     Constraint constraints[NUM_CONSTRAINTS];
     BOOL twoFingered;
 }
 
 @property (nonatomic, strong) CADisplayLink *displayLink;
-
+- (void)vmin:(Vector3 *)a  against:(Vector3 *)b into:(Vector3 *)c;
+- (void)vmax:(Vector3 *)a  against:(Vector3 *)b into:(Vector3 *)c;
 
 @end

@@ -20,27 +20,25 @@
 @synthesize displayLink;
 
 
-- (Vector3)vmin:(Vector3 *)a  against:(Vector3 *)b
+- (void)vmin:(Vector3 *)a  against:(Vector3 *)b into:(Vector3 *)c
 {
-    Vector3 newVector;
     
-    newVector.x = a->x < b->x ? a->x : b->x;
-    newVector.y = a->y < b->y ? a->y : b->y;
-    newVector.z = a->z < b->z ? a->z : b->z;
-    
-    return  newVector;
+    c->x = a->x < b->x ? a->x : b->x;
+    c->y = a->y < b->y ? a->y : b->y;
+    c->z = a->z < b->z ? a->z : b->z;
+}
+
+- (void)vmax:(Vector3 *)a  against:(Vector3 *)b into:(Vector3 *)c
+{
+    c->x = a->x > b->x ? a->x : b->x;
+    c->y = a->y > b->y ? a->y : b->y;
+    c->z = a->z > b->z ? a->z : b->z;
 }
 
 - (id)initWithCoder:(NSCoder *)aDecoder
 {
     self = [super initWithCoder:aDecoder];
     if (self) {
-        Vector3 t1 = {2,4,3};
-        Vector3 t2 = {2,3,9};
-        Vector3 r1 = {0,0,0};
-        
-        r1 = [self vmin:&t1 against:&t2];
-        NSLog(@"vmin returned %f,%f,%f",r1.x,r1.y,r1.z);
         /*
         // Begin by initializing the data structures.
         pointArray = [[NSMutableArray alloc] initWithObjects:
@@ -56,21 +54,8 @@
                       nil];
          */ 
         // static because we want the array to persist outside the scope of the function.
-        static Vector3 tmpPoints[NUM_PARTICLES];// = {
-/*        
-            {320,50,0},
-            {320,100,0},
-            {320,150,0},            
-            {320,200,0},
-            {320,250,0},
-            {320,300,0},
-            {320,350,0},
-            {320,400,0},
-            {320,450,0},
-            {320,500,0},
-            {320,550,0},
-            {320,600,0}};
-*/
+        static Vector3 tmpPoints[NUM_PARTICLES];
+        
         int ypos = 0;
         int yoff = MAX_LEN/NUM_PARTICLES;
         for (int pt=0; pt<NUM_PARTICLES; pt++) {
@@ -93,7 +78,7 @@
         
         timeStep = 1;
         
-        // start off with a static system.
+        // Start off with a static system.
         for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
         {
             previousPositions[curIndex] = currentPositions[curIndex];
@@ -106,8 +91,17 @@
             constraints[curIndex].restLength = yoff;
         }
         
-        displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(setNeedsDisplay)];
+        // Ball init.
+        ballPos.x = 10;
+        ballPos.y = 10;
+        ballPos.z = 10;
+        ballPrevPos.x = ballPos.x-0.001;
+        ballPrevPos.y = ballPos.y-0.001;        
+        ballPrevPos.z = ballPos.z;
+        ballForce.x = ballForce.y = ballForce.z = 1;
         
+        // Registering a selector with CADisplayLink allows you to be notified at every vsync.
+        displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(setNeedsDisplay)];
         [displayLink addToRunLoop:[NSRunLoop mainRunLoop] forMode:NSDefaultRunLoopMode];
         
         NSLog(@"Initialization done.");
@@ -146,28 +140,31 @@
     return ((double)nanos / 1000000000.0);
 }
 
-- (void)accumulateForces
+- (void)accumulateForces:(Vector3 *)forceAccumulatorArray ofCount:(int)particleCount
 {
-    for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
+    for (int curIndex=0; curIndex < particleCount; curIndex++) 
     {
-        forceAccumulators[curIndex] = gravity;
+        forceAccumulatorArray[curIndex] = gravity;
     }
 }
 
-- (void)movePointsUsingVerletIntegration
+- (void)moveParticlesUsingVerletIntegration:(Vector3 *)particlePosArray 
+                                    ofCount:(int)particleCount 
+                      withPreviousPositions:(Vector3 *)particlePreviousPosArray 
+                                 withForces:(Vector3 *)forcesArray
 {
     float timeStepSquared = timeStep*timeStep;
-    for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
+    for (int curIndex=0; curIndex < particleCount; curIndex++) 
     {        
         // x points to the current position
-        Vector3 *x = &currentPositions[curIndex];
+        Vector3 *x = &particlePosArray[curIndex];
         // temp is a copy of the current position
-        Vector3 temp = currentPositions[curIndex];
+        Vector3 temp = particlePosArray[curIndex];
         
         // oldPos is a reference to the previous position
-        Vector3 *oldPos = &previousPositions[curIndex];
+        Vector3 *oldPos = &particlePreviousPosArray[curIndex];
         // a is a reference the accumulated force
-        Vector3 *a = &forceAccumulators[curIndex];
+        Vector3 *a = &forcesArray[curIndex];
         // Verlet integration: x += x-oldPos+a*(timeStep*timeStep) ;
         x->x += x->x-oldPos->x+a->x*timeStepSquared;
         x->y += x->y-oldPos->y+a->y*timeStepSquared;
@@ -175,6 +172,135 @@
     }
 }
 
+- (void)satisfyConstraintsOf:(Vector3 *)particleArray 
+                     ofCount:(int)particleCount 
+             withConstraints:(Constraint *)constraintArray 
+                     ofCount:(int)constraintCount
+{
+    // Do a bounds check run. 
+    // MinVector and maxVector define a square bounds.
+    //Vector3 minVector = {0,0,0};
+    //Vector3 maxVector = {500,500,500};
+
+    for (int p=0; p<constraintCount; p++) 
+    {
+        Constraint c = constraintArray[p];
+        
+        Vector3 *x1 = &particleArray[c.particleAIndex];
+        Vector3 *x2 = &particleArray[c.particleBIndex];
+        Vector3 delta;
+        /*
+        [self vmax:x1 against:&minVector into:x1];
+        [self vmin:x1 against:&maxVector into:x1];
+        [self vmax:x2 against:&minVector into:x2];
+        [self vmin:x2 against:&maxVector into:x2];
+         */
+        
+        delta.x = x2->x-x1->x;
+        delta.y = x2->y-x1->y;
+
+        // The version with square root approximation.
+        float restLengthSqr = c.restLength*c.restLength;
+        float deltaDot = delta.x*delta.x + delta.y*delta.y;
+        // As long as the deltaDot is greater than the restLengthSqr the sign of the expression 
+        // will be negative unless I move the 0.5 before rather than after.
+        delta.x *= 0.5-restLengthSqr/(deltaDot+restLengthSqr);//-0.5;
+        delta.y *= 0.5-restLengthSqr/(deltaDot+restLengthSqr);//-0.5;
+        
+        x1->x += delta.x;
+        x1->y += delta.y;
+        x2->x -= delta.x;
+        x2->y -= delta.y;
+    }
+}
+
+- (void)satisfyElasticConstraints
+{
+    // This allows for custom iterations for the elastic.
+    for (int j=0; j<NUM_ITERATIONS; j++) 
+    {
+        [self satisfyConstraintsOf:currentPositions ofCount:NUM_PARTICLES withConstraints:constraints ofCount:NUM_CONSTRAINTS];    
+        
+        // constrain position 0 to the position selected by the user.
+        currentPositions[0].x = userPosition1.x;
+        currentPositions[0].y = userPosition1.y;    
+        
+        if (twoFingered) {
+            currentPositions[NUM_PARTICLES-1].x = userPosition2.x;
+            currentPositions[NUM_PARTICLES-1].y = userPosition2.y;    
+        }
+    }
+}
+
+- (void)accumulateElasticForces
+{
+    [self accumulateForces:forceAccumulators ofCount:NUM_PARTICLES];
+}
+
+- (void)moveElasticUsingVerletIntegration
+{
+    [self moveParticlesUsingVerletIntegration:currentPositions ofCount:NUM_PARTICLES withPreviousPositions:previousPositions withForces:forceAccumulators];
+}
+
+- (void)satisfyBallConstraints
+{
+    // Do a bounds check run. 
+    // MinVector and maxVector define a square bounds.
+    Vector3 minVector = {0,0,0};
+    Vector3 maxVector = {700,700,0};
+    [self vmax:&ballPos against:&minVector into:&ballPos];
+    [self vmin:&ballPos against:&maxVector into:&ballPos];
+    
+    // Check against elastic.
+    
+}
+
+- (void)updateGame
+{    
+    //CFAbsoluteTime start = CFAbsoluteTimeGetCurrent();
+    [self accumulateElasticForces];
+    [self moveElasticUsingVerletIntegration];
+    [self satisfyElasticConstraints];
+    //CFAbsoluteTime end = CFAbsoluteTimeGetCurrent();
+    //NSLog(@"Time spent on update loop is %f",end-start);
+    
+    // Ball stuff
+    [self moveParticlesUsingVerletIntegration:&ballPos ofCount:1 withPreviousPositions:&ballPrevPos withForces:&ballForce];
+    [self satisfyBallConstraints];
+}
+/*
+ - (void)movePointsUsingVerletIntegration
+ {
+ float timeStepSquared = timeStep*timeStep;
+ for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
+ {        
+ // x points to the current position
+ Vector3 *x = &currentPositions[curIndex];
+ // temp is a copy of the current position
+ Vector3 temp = currentPositions[curIndex];
+ 
+ // oldPos is a reference to the previous position
+ Vector3 *oldPos = &previousPositions[curIndex];
+ // a is a reference the accumulated force
+ Vector3 *a = &forceAccumulators[curIndex];
+ // Verlet integration: x += x-oldPos+a*(timeStep*timeStep) ;
+ x->x += x->x-oldPos->x+a->x*timeStepSquared;
+ x->y += x->y-oldPos->y+a->y*timeStepSquared;
+ *oldPos = temp;
+ }
+ } 
+ */
+/*
+ - (void)accumulateForces
+ {
+ for (int curIndex=0; curIndex < NUM_PARTICLES; curIndex++) 
+ {
+ forceAccumulators[curIndex] = gravity;
+ }
+ }
+
+ */
+/*
 - (void)satisfyConstraints
 {
     for (int j=0; j<NUM_ITERATIONS; j++) {
@@ -229,15 +355,15 @@
 
     }
 }
-
-
+*/
+/*
 - (void)updateGame
 {    
     [self accumulateForces];
     [self movePointsUsingVerletIntegration];
     [self satisfyConstraints];
 }
-
+*/
 - (void)drawScene
 {
 
